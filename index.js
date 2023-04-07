@@ -6,11 +6,6 @@ canvas.height = innerHeight
 
 class Player{
     constructor(){
-        this.position = {
-            x: 200, 
-            y: 200
-        }
-
         this.velocity = {
             x: 0,
             y: 0
@@ -18,25 +13,64 @@ class Player{
 
         const image = new Image()
         image.src = './img/spaceship.png'
-
-        this.image = image
-        this.width= 100
-        this.height= 100  
+        image.onload = () => {
+            const scale = 0.15
+            this.image = image
+            this.width= image.width * scale
+            this.height= image.height * scale
+            this.position = {
+                x: canvas.width / 2 - this.width / 2, 
+                y: canvas.height - this.height - 20
+            }
+        }
     }
+
+
     draw(){
         //c.fillStyle = 'red'
         //c.fillRect(this.position.x, this.position.y, this.width,
             //this.height)
-        c.drawImage(this.image, this.position.x, this.position.y)
+        c.drawImage(this.image,
+            this.position.x,
+            this.position.y,
+            this.width,
+            this.height
+            )
+    }
+
+    update(){
+        if(this.image){
+        this.draw()
+        this.position.x += this.velocity.x
+        }
     }
 }
 
 const player = new Player()
-player.draw()
 
 function animate(){
     requestAnimationFrame(animate)
-    player.draw()
+    c.fillStyle= 'black'
+    c.fillRect(0, 0, canvas.width, canvas.height)
+    player.update()
 }   
 
 animate()
+
+addEventListener('kewydown', ({key}) => {
+    console.log(key)
+    switch(key){
+        case 'a':
+            console.log('left')
+            break
+        case 'd':
+            console.log('right')
+            break
+        case ' ':
+            console.log('space')
+            break
+        case 's':
+            console.log('down')
+            break  
+    }
+})
